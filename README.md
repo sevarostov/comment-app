@@ -37,5 +37,6 @@
 
   ```sh
   docker exec php php artisan db:seed DatabaseSeeder NewsSeeder VideoPostSeeder
+  docker exec php php artisan db:seed CommentSeeder
   ```
 

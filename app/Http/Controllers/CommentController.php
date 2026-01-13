@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\VideoPostRequest;
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
-use App\Models\VideoPost;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class VideoPostController extends Controller {
+class CommentController extends Controller
+{
+	protected static $model = Comment::class;
 
-	protected static $model = VideoPost::class;
+
 
 	/**
 	 * Display a listing of the resource.
@@ -21,9 +21,9 @@ class VideoPostController extends Controller {
 	 */
 	public function index(): JsonResponse {
 		try {
-			$videoPosts = self::$model::all();
+			$comments = self::$model::all();
 
-			return response()->json($videoPosts, ResponseAlias::HTTP_OK);
+			return response()->json($comments, ResponseAlias::HTTP_OK);
 		} catch (\Exception $e) {
 			return response()->json([
 				'message' => $e->getMessage(),
@@ -33,13 +33,13 @@ class VideoPostController extends Controller {
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Creating a new resource.
 	 */
-	public function store(VideoPostRequest $request) {
+	public function store(CommentRequest $request) {
 		try {
-			$videoPost = self::$model::create($request->all());
+			$comment = self::$model::create($request->all());
 
-			return response()->json($videoPost, ResponseAlias::HTTP_CREATED);
+			return response()->json($comment, ResponseAlias::HTTP_CREATED);
 		} catch (\Exception $e) {
 			return response()->json([
 				'message' => $e->getMessage(),
@@ -48,42 +48,36 @@ class VideoPostController extends Controller {
 		}
 	}
 
-	/**
-	 * Display the specified resource.
-	 */
-	public function show(VideoPost $videoPost, VideoPostRequest $videoPostRequest) {
+    /**
+     * Display the specified resource.
+     */
+    public function show(Comment $comment)
+    {
 		try {
-			/** @var VideoPost $videoPost */
-			$videoPost = self::$model::find($videoPost->id);
-			$comments = Comment::where(COMMENT::FIELD_COMMENTABLE_TYPE, '=',VideoPost::TABLE_NANE)
-				->where(COMMENT::FIELD_COMMENTABLE_ID, $videoPost->id)
-				->cursorPaginate(
-					perPage: self::PER_PAGE,
-					cursor: $videoPostRequest->get('cursor'),
-				);
+			$comment = self::$model::findOrFail($comment->id);
 
-			return response()->json(['videoPost' => $videoPost, 'comments' => $comments], ResponseAlias::HTTP_OK);
+			return response()->json($comment, ResponseAlias::HTTP_OK);
 		} catch (ModelNotFoundException $e) {
 			return response()->json([
 				'message' => $e->getMessage(),
 				'details' => $e->getMessage()],
 				status: ResponseAlias::HTTP_NOT_FOUND);
 		}
-	}
+    }
 
 	/**
 	 * Update the specified resource in storage.
 	 */
-	public function update(VideoPostRequest $request, string $id) {
+	public function update(CommentRequest $request, string $id) {
 		try {
-			$videoPost = self::$model::findOrFail($id);
-			$videoPost->fill($request->all());
+			$comment = self::$model::findOrFail($id);
+			$comment->fill($request->all());
 
-			if (!$videoPost->save()) {
+			if (!$comment->save()) {
 				throw new \Exception("Bad Request", ResponseAlias::HTTP_BAD_REQUEST);
 			}
 
-			return response()->json($videoPost, ResponseAlias::HTTP_OK);
+			return response()->json($comment, ResponseAlias::HTTP_OK);
 		} catch (ModelNotFoundException|\Exception $e) {
 			return response()->json([
 				'message' => $e->getMessage(),
@@ -92,13 +86,14 @@ class VideoPostController extends Controller {
 		}
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 */
-	public function destroy(VideoPost $videoPost) {
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Comment $comment)
+    {
 		try {
-			$videoPost = self::$model::findOrFail($videoPost->id);
-			$videoPost->delete();
+			$comment = self::$model::findOrFail($comment->id);
+			$comment->delete();
 
 			return response()->json(['message' => 'Success'], ResponseAlias::HTTP_OK);
 		} catch (ModelNotFoundException|\Exception $e) {
@@ -107,5 +102,5 @@ class VideoPostController extends Controller {
 				'details' => $e->getMessage()],
 				status: ResponseAlias::HTTP_EXPECTATION_FAILED);
 		}
-	}
+    }
 }

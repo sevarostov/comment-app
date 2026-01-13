@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NewsRequest;
+use App\Models\Comment;
 use App\Models\News;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Pagination\CursorPaginator;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class NewsController extends Controller
-{
+class NewsController extends Controller {
 	protected static $model = News::class;
 
 	/**
@@ -27,7 +27,7 @@ class NewsController extends Controller
 			return response()->json([
 				'message' => $e->getMessage(),
 				'details' => $e->getMessage()],
-				status: $e->getCode());
+				status: ResponseAlias::HTTP_EXPECTATION_FAILED);
 		}
 	}
 
@@ -43,23 +43,30 @@ class NewsController extends Controller
 			return response()->json([
 				'message' => $e->getMessage(),
 				'details' => $e->getMessage()],
-				status: $e->getCode());
+				status: ResponseAlias::HTTP_EXPECTATION_FAILED);
 		}
 	}
 
 	/**
 	 * Display the specified resource.
 	 */
-	public function show(News $news) {
+	public function show(News $news, NewsRequest $newsRequest) {
+		return $news;
 		try {
-			$news = self::$model::findOrFail($news->id);
+			/** @var News $news */
+			$news = self::$model::find($news->id);
+			$comments = Comment::where(COMMENT::FIELD_COMMENTABLE_TYPE, '=',News::TABLE_NANE)
+				->cursorPaginate(
+					perPage: self::PER_PAGE,
+					cursor: $newsRequest->get('cursor'),
+				);
 
-			return response()->json($news, ResponseAlias::HTTP_OK);
+			return response()->json(['news' => $news, 'comments' => $comments], ResponseAlias::HTTP_OK);
 		} catch (ModelNotFoundException $e) {
 			return response()->json([
 				'message' => $e->getMessage(),
 				'details' => $e->getMessage()],
-				status: $e->getCode());
+				status: ResponseAlias::HTTP_NOT_FOUND);
 		}
 	}
 
@@ -80,15 +87,14 @@ class NewsController extends Controller
 			return response()->json([
 				'message' => $e->getMessage(),
 				'details' => $e->getMessage()],
-				status: $e->getCode());
+				status: ResponseAlias::HTTP_EXPECTATION_FAILED);
 		}
 	}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(News $news)
-    {
+	/**
+	 * Remove the specified resource from storage.
+	 */
+	public function destroy(News $news) {
 		try {
 			$news = self::$model::findOrFail($news->id);
 			$news->delete();
@@ -98,7 +104,7 @@ class NewsController extends Controller
 			return response()->json([
 				'message' => $e->getMessage(),
 				'details' => $e->getMessage()],
-				status: $e->getCode());
+				status: ResponseAlias::HTTP_EXPECTATION_FAILED);
 		}
-    }
+	}
 }
