@@ -12,8 +12,6 @@ class CommentController extends Controller
 {
 	protected static $model = Comment::class;
 
-
-
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -34,8 +32,11 @@ class CommentController extends Controller
 
 	/**
 	 * Creating a new resource.
+	 *
+	 * @param CommentRequest $request
+	 * @return JsonResponse
 	 */
-	public function store(CommentRequest $request) {
+	public function store(CommentRequest $request): JsonResponse {
 		try {
 			$comment = self::$model::create($request->all());
 
@@ -50,8 +51,11 @@ class CommentController extends Controller
 
     /**
      * Display the specified resource.
-     */
-    public function show(Comment $comment)
+     *
+	 * @param Comment $comment
+	 * @return JsonResponse
+	 */
+    public function show(Comment $comment): JsonResponse
     {
 		try {
 			$comment = self::$model::findOrFail($comment->id);
@@ -67,8 +71,13 @@ class CommentController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
+	 *
+	 * @param CommentRequest $request
+	 * @param string $id
+	 *
+	 * @return JsonResponse
 	 */
-	public function update(CommentRequest $request, string $id) {
+	public function update(CommentRequest $request, string $id): JsonResponse {
 		try {
 			$comment = self::$model::findOrFail($id);
 			$comment->fill($request->all());
@@ -86,10 +95,13 @@ class CommentController extends Controller
 		}
 	}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Comment $comment)
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param Comment $comment
+	 * @return JsonResponse
+	 */
+    public function destroy(Comment $comment): JsonResponse
     {
 		try {
 			$comment = self::$model::findOrFail($comment->id);

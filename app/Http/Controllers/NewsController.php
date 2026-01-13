@@ -34,8 +34,12 @@ class NewsController extends Controller {
 
 	/**
 	 * Creating a new resource.
+	 *
+	 * @param NewsRequest $request
+	 *
+	 * @return JsonResponse
 	 */
-	public function store(NewsRequest $request) {
+	public function store(NewsRequest $request): JsonResponse {
 		try {
 			$news = self::$model::create($request->all());
 
@@ -50,8 +54,13 @@ class NewsController extends Controller {
 
 	/**
 	 * Display the specified resource.
+	 *
+	 * @param News $news
+	 * @param NewsRequest $newsRequest
+	 *
+	 * @return JsonResponse
 	 */
-	public function show(News $news, NewsRequest $newsRequest) {
+	public function show(News $news, NewsRequest $newsRequest): JsonResponse {
 
 		try {
 			/** @var News $news */
@@ -73,8 +82,13 @@ class NewsController extends Controller {
 
 	/**
 	 * Update the specified resource in storage.
+	 *
+	 * @param NewsRequest $request
+	 * @param string $id
+	 *
+	 * @return JsonResponse
 	 */
-	public function update(NewsRequest $request, string $id) {
+	public function update(NewsRequest $request, string $id): JsonResponse {
 		try {
 			$news = self::$model::findOrFail($id);
 			$news->fill($request->all());
@@ -94,8 +108,11 @@ class NewsController extends Controller {
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param News $news
+	 * @return JsonResponse
 	 */
-	public function destroy(News $news) {
+	public function destroy(News $news): JsonResponse {
 		try {
 			$news = self::$model::findOrFail($news->id);
 			$news->delete();

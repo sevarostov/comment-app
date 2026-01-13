@@ -29,13 +29,5 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $videoPostModel = VideoPost::find(1);
-//        $newsModel = News::find(1)->cursorPaginate(50);
-//		/** @var News $newsModel */
-		$comments = Comment::where(COMMENT::FIELD_COMMENTABLE_TYPE, '=',News::TABLE_NANE)
-		->cursorPaginate(15);
-		;
-
-		dd($comments);
     }
 }

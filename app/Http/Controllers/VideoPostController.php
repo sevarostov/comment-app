@@ -7,7 +7,6 @@ use App\Models\Comment;
 use App\Models\VideoPost;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class VideoPostController extends Controller {
@@ -34,8 +33,12 @@ class VideoPostController extends Controller {
 
 	/**
 	 * Store a newly created resource in storage.
+	 *
+	 * @param VideoPostRequest $request
+	 *
+	 * @return JsonResponse
 	 */
-	public function store(VideoPostRequest $request) {
+	public function store(VideoPostRequest $request): JsonResponse {
 		try {
 			$videoPost = self::$model::create($request->all());
 
@@ -50,8 +53,13 @@ class VideoPostController extends Controller {
 
 	/**
 	 * Display the specified resource.
+	 *
+	 * @param VideoPost $videoPost
+	 * @param VideoPostRequest $videoPostRequest
+	 *
+	 * @return JsonResponse
 	 */
-	public function show(VideoPost $videoPost, VideoPostRequest $videoPostRequest) {
+	public function show(VideoPost $videoPost, VideoPostRequest $videoPostRequest): JsonResponse {
 		try {
 			/** @var VideoPost $videoPost */
 			$videoPost = self::$model::find($videoPost->id);
@@ -73,8 +81,13 @@ class VideoPostController extends Controller {
 
 	/**
 	 * Update the specified resource in storage.
+	 *
+	 * @param VideoPostRequest $request
+	 * @param string $id
+	 *
+	 * @return JsonResponse
 	 */
-	public function update(VideoPostRequest $request, string $id) {
+	public function update(VideoPostRequest $request, string $id): JsonResponse {
 		try {
 			$videoPost = self::$model::findOrFail($id);
 			$videoPost->fill($request->all());
@@ -94,8 +107,12 @@ class VideoPostController extends Controller {
 
 	/**
 	 * Remove the specified resource from storage.
+	 *
+	 * @param VideoPost $videoPost
+	 *
+	 * @return JsonResponse
 	 */
-	public function destroy(VideoPost $videoPost) {
+	public function destroy(VideoPost $videoPost): JsonResponse {
 		try {
 			$videoPost = self::$model::findOrFail($videoPost->id);
 			$videoPost->delete();
