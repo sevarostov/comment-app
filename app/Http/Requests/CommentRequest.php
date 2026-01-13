@@ -27,4 +27,21 @@ class CommentRequest extends BaseRequest {
 		return [];
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function after(): array
+	{
+		return [
+			function (Validator $validator) {
+				if (!$this->getModel()) {
+					$validator->errors()->add(
+						'commentable_id',
+						'Model not Exists!',
+					);
+				}
+			}
+		];
+	}
+
 }

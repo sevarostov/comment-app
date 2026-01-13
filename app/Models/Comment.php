@@ -58,6 +58,13 @@ class Comment extends Model
 		self::FIELD_COMMENTABLE_ID => "int",
 	];
 
+	protected $fillable = [
+		'user_id',
+		'commentable_id',
+		'commentable_type',
+		'text',
+	];
+
 	/**
 	 * Get the parent commentable model (news, video_post or comment).
 	 */

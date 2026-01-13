@@ -7,10 +7,10 @@ use App\Models\Comment;
 use App\Models\News;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Pagination\CursorPaginator;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class NewsController extends Controller {
+
 	protected static $model = News::class;
 
 	/**
@@ -24,6 +24,7 @@ class NewsController extends Controller {
 
 			return response()->json($news, ResponseAlias::HTTP_OK);
 		} catch (\Exception $e) {
+
 			return response()->json([
 				'message' => $e->getMessage(),
 				'details' => $e->getMessage()],
@@ -51,7 +52,7 @@ class NewsController extends Controller {
 	 * Display the specified resource.
 	 */
 	public function show(News $news, NewsRequest $newsRequest) {
-		return $news;
+
 		try {
 			/** @var News $news */
 			$news = self::$model::find($news->id);

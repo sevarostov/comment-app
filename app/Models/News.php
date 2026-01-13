@@ -29,7 +29,8 @@ class News extends Model
 	const TABLE_NANE = "news";
 
 	protected $fillable = [
-		'text',
+		'title',
+		'description',
 	];
 
 	/**
