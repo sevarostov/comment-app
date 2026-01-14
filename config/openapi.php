@@ -36,7 +36,7 @@ return [
 
     'servers' => [
         [
-            'url' => 'http://127.0.0.1:8000',
+            'url' => 'http://127.0.0.1',
             'description' => 'Artisan server',
         ],
         [
@@ -116,7 +116,7 @@ return [
             'name' => 'Artisan Environment',
             'parent' => 'base',
             'variables' => [
-                'base_url' => 'http://127.0.0.1:8000',
+                'base_url' => 'http://127.0.0.1',
                 'api_key' => '__GENERATED__',
             ],
         ],

@@ -6,8 +6,6 @@ namespace  {
 
 namespace {
 
-	use Core\DB\MacrosLoader;
-
 	class EloquentTypeHinting extends \Illuminate\Database\Eloquent\Model
     {
         /**
